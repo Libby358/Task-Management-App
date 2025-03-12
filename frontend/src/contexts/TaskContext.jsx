@@ -22,7 +22,7 @@ function taskReducer(state, action) {
     case 'UPDATE_TASK_SUCCESS':
       return {
         ...state,
-        tasks: state.tasks.map(task => 
+        tasks: state.tasks.map(task =>
           task.id === action.payload.id ? action.payload : task
         ),
       };
@@ -36,7 +36,7 @@ function taskReducer(state, action) {
   }
 }
 
-export function TaskProvider({ children }) {
+export const TaskProvider = ({ children }) => {
   const [state, dispatch] = useReducer(taskReducer, initialState);
 
   const fetchTasks = async () => {

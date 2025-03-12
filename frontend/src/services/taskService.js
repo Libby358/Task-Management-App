@@ -1,74 +1,64 @@
-// src/services/taskService.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api/tasks'; // Replace with your actual API URL
+const API_URL = 'http://localhost:5000/api/tasks'; 
 
-// Create an axios instance with default config
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Add request interceptor for auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
+// Get all tasks
 export const getTasks = async () => {
   try {
-    const response = await api.get('');
+    const response = await axios.get(API_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Error fetching tasks:', error);
-    throw error;
+    console.error("Error fetching tasks:", error);
+    throw error; // You can handle it in your component later
   }
 };
 
-export const getTaskById = async (id) => {
-  try {
-    const response = await api.get(`/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error fetching task with id ${id}:`, error);
-    throw error;
-  }
-};
-
+// Create a new task
 export const createTask = async (taskData) => {
   try {
-    const response = await api.post('', taskData);
+    const response = await axios.post(API_URL, taskData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Error creating task:', error);
+    console.error("Error creating task:", error);
     throw error;
   }
 };
 
-export const updateTask = async (id, taskData) => {
+// Update an existing task
+export const updateTask = async (taskId, taskData) => {
   try {
-    const response = await api.put(`/${id}`, taskData);
+    const response = await axios.put(`${API_URL}/${taskId}`, taskData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error(`Error updating task with id ${id}:`, error);
+    console.error("Error updating task:", error);
     throw error;
   }
 };
 
-export const deleteTask = async (id) => {
+// Delete a task
+export const deleteTask = async (taskId) => {
   try {
-    await api.delete(`/${id}`);
-    return true;
+    const response = await axios.delete(`${API_URL}/${taskId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.data;
   } catch (error) {
-    console.error(`Error deleting task with id ${id}:`, error);
+    console.error("Error deleting task:", error);
     throw error;
   }
 };
+
